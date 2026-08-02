@@ -4,5 +4,5 @@ set(ASYNC_CLI_SOURCES
 
 add_app(asynctask_cli
     SOURCES ${ASYNC_CLI_SOURCES}
-    LIBS    tasklib
+    LIBS tasklib
 )

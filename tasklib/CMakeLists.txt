@@ -1,8 +1,11 @@
 set(TASKLIB_HEADERS
-    include/tasklib/common.hpp)
+    include/tasklib/common.hpp
+    include/tasklib/types.hpp
+    include/tasklib/taskManager.hpp)
 
 set(TASK_LIB_SOURCES
-    src/common.cpp)
+    src/common.cpp
+    src/taskManager.cpp)
 
 add_library(tasklib STATIC 
         ${TASKLIB_HEADERS}

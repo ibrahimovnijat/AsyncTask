@@ -1,0 +1,28 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# Per-developer local presets (see CMakePresets.json for the shared ones)
+CMakeUserPresets.json
+
+# vcpkg manifest-mode install tree
+vcpkg_installed/
+
+# IDE / editor
+.idea/
+# .vscode/
+.cache/
+
+# macOS
+.DS_Store
+
+# Compiled artifacts (in case of in-source stragglers)
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe

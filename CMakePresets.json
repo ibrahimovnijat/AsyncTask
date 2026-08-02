@@ -6,7 +6,12 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": { "CMAKE_COLOR_DIAGNOSTICS": "ON" }
+            "cacheVariables": {
+                "CMAKE_COLOR_DIAGNOSTICS": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "BUILD_TESTS": "OFF",
+                "WARNINGS_AS_ERRORS": "OFF"
+            }
         },
         {
             "name": "debug",

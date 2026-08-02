@@ -16,9 +16,6 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(AddApp)
 include(CompilerWarnings)
 
-# Add configuration options (TODO: make move these to CMakePresets cache)
-option(BUILD_TESTS "Build the gtests" ON)
-option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
 # Speed up rebuilds when ccache is available; harmless otherwise.
 find_program(CCACHE_PROGRAM ccache)

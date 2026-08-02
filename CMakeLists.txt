@@ -12,21 +12,21 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Include reusable cmake functions
-list(APPEND_CMAKE_MODULE_PATH, ${PROJECT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(AddApp)
-include(CompilerWarning)
+include(CompilerWarnings)
 
 # Add configuration/build options
 option(BUILD_TESTS "Build the gtests" OFF)
 option(WARNING_AS_ERRORS "Treat compiler warnings as errors" ON)
-option(BUILD_ASYNCTASK_CLI "Build the asynctask_cli app" ON)
+# option(BUILD_ASYNCTASK_CLI "Build the asynctask_cli app" ON)
 # option(INSTALL "Generate install/export rules for libs" OFF) # redundant?
 
-# Speed up rebuilds when ccache is available; harmless otherwise.
-find_program(CCACHE_PROGRAM ccache)
-if(CCACHE_PROGRAM)
-    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
-endif()
+# # Speed up rebuilds when ccache is available; harmless otherwise.
+# find_program(CCACHE_PROGRAM ccache)
+# if(CCACHE_PROGRAM)
+#     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM})
+# endif()
 
 # # Optional sanitizer instrumentation for the whole tree, e.g.:
 # #   cmake -S . -B build-tsan -DTASKLIB_SANITIZER=thread
@@ -36,10 +36,8 @@ endif()
 #     add_link_options(-fsanitize=${TASKLIB_SANITIZER})
 # endif()
 
-
-if(BUILD_ASYNCTASK_CLI)
-    add_subdirectory(asynctask_cli)
-endif()
+add_subdirectory(tasklib)
+add_subdirectory(asynctask_cli)
 
 if(BUILD_TESTS)
     enable_testing()

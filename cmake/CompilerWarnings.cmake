@@ -16,7 +16,7 @@ function(set_warnings target)
 
     target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic)
 
-    if(WARNING_AS_ERRORS)
+    if(WARNINGS_AS_ERRORS)
         target_compile_options(${target} PRIVATE -Werror)
     endif()
 

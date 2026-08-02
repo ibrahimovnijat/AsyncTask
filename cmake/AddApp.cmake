@@ -1,7 +1,7 @@
 # cppframework_add_app(<name> SOURCES <src...> [LIBS <lib...>])
 #
 # Declares an application executable with the project's standard warning set
-# and links it against the given CppFramework:: libraries, e.g.:
+# and links it against the given libraries, e.g.:
 #   add_app(mytool
 #       SOURCES main.cpp
 #       LIBS <LIB_NAME>
@@ -20,5 +20,5 @@ function(add_app name)
     endif()
 
     set_warnings(${name})
-    
+
 endfunction()

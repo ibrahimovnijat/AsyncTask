@@ -23,15 +23,6 @@
             "displayName": "Release",
             "inherits": "base",
             "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
-        },
-        {
-            "name": "sirona-vcpkg",
-            "displayName": "Sirona Qt app",
-            "inherits": "debug-vcpkg",
-            "cacheVariables": {
-                "VCPKG_MANIFEST_FEATURES": "sirona",
-                "CPPFRAMEWORK_BUILD_SIRONA": "ON"
-            }
         }
     ],
     "buildPresets": [

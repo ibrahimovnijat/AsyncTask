@@ -94,8 +94,11 @@ std::expected<TaskInfo, TaskError> TaskManager::status(TaskId id) const {
         control = it->second.control;
         type = it->second.type;
     }
-    return TaskInfo{id, std::move(type), control->status(), control->progress(),
-                    control->error_message()};
+    return TaskInfo{.id = id,
+                    .status = control->status(),
+                    .type = std::move(type),
+                    .progress = control->progress(),
+                    .error = control->error_message()};
 }
 
 std::vector<TaskInfo> TaskManager::statuses() const {
@@ -113,8 +116,11 @@ std::vector<TaskInfo> TaskManager::statuses() const {
     result.reserve(snapshot.size());
     for (auto& [id, rest] : snapshot) {
         auto& [type, control] = rest;
-        result.push_back(TaskInfo{id, std::move(type), control->status(), control->progress(),
-                                  control->error_message()});
+        result.push_back(TaskInfo{.id = id,
+                                  .status = control->status(),
+                                  .type = std::move(type),
+                                  .progress = control->progress(),
+                                  .error = control->error_message()});
     }
     return result;
 }

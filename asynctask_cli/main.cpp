@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
             handle_status(manager, command);
             break;
         case cli::Command::Type::Invalid:
-            std::cout << std::format("Error: {}\n", command.error);
+            std::cout << std::format("Error: {}\n", command.error.value_or("invalid command"));
             break;
         }
     }

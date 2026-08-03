@@ -24,7 +24,7 @@ Command invalid(std::string message) {
 
 } // namespace
 
-Command parse_command(std::string_view line) {
+Command parseCommand(const std::string& line) {
     const auto tokens = tokenize(line);
     if (tokens.empty())
         return {};

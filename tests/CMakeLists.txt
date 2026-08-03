@@ -16,15 +16,15 @@ endif()
 
 include(GoogleTest)
 
-add_executable(tasklib_tests
-    tasklib/CommonTest.cpp
+add_executable(unit_tests
+    tasklib/taskManagerTest.cpp
 )
 
-target_link_libraries(tasklib_tests
+target_link_libraries(unit_tests
     PRIVATE
         tasklib
         GTest::gtest_main
 )
 
-set_warnings(tasklib_tests)
-gtest_discover_tests(tasklib_tests)
+set_warnings(unit_tests)
+gtest_discover_tests(unit_tests)

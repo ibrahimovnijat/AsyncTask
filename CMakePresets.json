@@ -9,7 +9,7 @@
             "cacheVariables": {
                 "CMAKE_COLOR_DIAGNOSTICS": "ON",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-                "BUILD_TESTS": "OFF",
+                "BUILD_TESTS": "ON",
                 "WARNINGS_AS_ERRORS": "OFF"
             }
         },

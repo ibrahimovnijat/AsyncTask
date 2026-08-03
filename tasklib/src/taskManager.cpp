@@ -9,24 +9,30 @@ namespace tasklib {
 TaskManager::~TaskManager() {
     stop_all();
 
-    // Move the entries out so worker threads are joined outside of mutex_
-    // (a worker never touches the manager, but holding a lock across joins
-    // would be a deadlock waiting to happen if that ever changes).
+    /**
+     * Move the entries out so worker threads are joined outside of mutex_ (a worker never touches
+     * the manager, but holding a lock across joins would be a deadlock waiting to happen if that
+     * ever changes).
+     */
     std::unordered_map<TaskId, Entry> doomed;
     {
         std::lock_guard lock(mutex_);
         doomed.swap(tasks_);
     }
-    // ~Entry destroys each std::jthread, which joins. Tasks that honour their
-    // checkpoints exit promptly because stop_all() already flagged them.
+    /**
+     * ~Entry destroys each std::jthread, which joins. Tasks that honour their checkpoints exit
+     * promptly because stop_all() already flagged them.
+     */
 }
 
 TaskId TaskManager::start(TaskFn fn, std::string type) {
     auto control = std::make_shared<TaskControl>();
 
-    // The worker owns only the control block and the task function, never a
-    // pointer back into the manager. This keeps start() safe even if the task
-    // begins (or finishes) before the bookkeeping below completes.
+    /**
+     * The worker owns only the control block and the task function, never a pointer back into the
+     * manager. This keeps start() safe even if the task begins (or finishes) before the bookkeeping
+     * below completes.
+     */
     std::jthread worker([control, fn = std::move(fn)]() mutable {
         TaskContext context(control);
         std::exception_ptr error;

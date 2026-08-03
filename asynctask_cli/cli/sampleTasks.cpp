@@ -9,8 +9,10 @@
 namespace cli {
 using namespace std::chrono_literals;
 
-/// A wait-bound task: 100 steps of 50 ms each (~5 s total). Checkpoints every
-/// step, so pause/stop take effect within one step.
+/**
+ * @brief A wait-bound task: 100 steps of 50 ms each (~5 s total). Checkpoints every step,
+ * so pause/stop take effect within one step.
+ */
 tasklib::TaskFn make_count_task() {
     return [](tasklib::TaskContext &ctx) {
         constexpr int steps = 100;
@@ -23,6 +25,9 @@ tasklib::TaskFn make_count_task() {
     };
 }
 
+/**
+ * @brief Checks whether the number is prime of not.
+ */
 bool is_prime(std::uint64_t n) {
     if (n < 2)
         return false;
@@ -32,14 +37,17 @@ bool is_prime(std::uint64_t n) {
     return true;
 }
 
-/// Published result of the last primes task. Besides making the result
-/// observable, the atomic store keeps the compiler from optimising the
-/// computation away.
+/**
+ * @brief Published result of the last primes task. Besides making the result observable, the atomic
+ * store keeps the compiler from optimising the computation away.
+ */
 std::atomic<std::uint64_t> g_last_prime_count{0};
 
-/// A CPU-bound task: counts primes below a fixed limit by trial division.
-/// Checkpoints every 1024 candidates - frequent enough that pause/stop feel
-/// immediate, rare enough that the synchronization cost is negligible.
+/**
+ * @brief A CPU-bound task: counts primes below a fixed limit by trial division. Checkpoints every
+ * 1024 candidates - frequent enough that pause/stop feel immediate, rare enough that the
+ * synchronization cost is negligible.
+ */
 tasklib::TaskFn make_primes_task() {
     return [](tasklib::TaskContext &ctx) {
         constexpr std::uint64_t limit = 2'000'000;

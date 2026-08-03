@@ -6,8 +6,10 @@
 
 namespace tasklib {
 
-// Unique identifier for task ID. IDs are assigned by TaskManager. Start at
-// 1 and are never reused within the lifetime of a manager.
+/**
+ * @brief Unique identifier for task ID. IDs are assigned by TaskManager. Start at 1 and are never
+ * reused within the lifetime of a manager.
+ */
 using TaskId = std::uint64_t;
 
 // Lifecycle of a task

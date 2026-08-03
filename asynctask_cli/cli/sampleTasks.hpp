@@ -8,8 +8,10 @@
 
 namespace cli {
 
-/// A hard-wired task type the example application can start. `make` produces
-/// a fresh task function for each started instance.
+/**
+ * @brief A hard-wired task type the example application can start. `make` produces a fresh task
+ * function for each started instance.
+ */
 struct SampleTaskType {
     std::string_view id;
     std::string_view description;

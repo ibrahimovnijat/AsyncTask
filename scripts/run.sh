@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -euo pipefail
 clear 2>/dev/null || true
 
@@ -13,8 +14,4 @@ case "${1:-}" in
         ;;
 esac
 
-echo -e "\n----------- Async Task Cli ($PRESET) ---------- \n"
-
 "$ROOT_DIR/build/$PRESET/asynctask_cli/asynctask_cli" "$@"
-
-echo -e "\n--------------- End -----------------\n"

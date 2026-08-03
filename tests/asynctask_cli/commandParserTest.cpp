@@ -29,9 +29,9 @@ TEST(CommandParserTest, StartWithAndWithoutType) {
 }
 
 TEST(CommandParserTest, ControlCommandsRequireExactlyOneId) {
-    for (const auto& [verb, type] : {std::pair{"pause", Command::Type::Pause},
-                                     std::pair{"resume", Command::Type::Resume},
-                                     std::pair{"stop", Command::Type::Stop}}) {
+    for (const auto &[verb, type] :
+         {std::pair{"pause", Command::Type::Pause}, std::pair{"resume", Command::Type::Resume},
+          std::pair{"stop", Command::Type::Stop}}) {
         const auto valid = parseCommand(std::string(verb) + " 7");
         EXPECT_EQ(valid.type, type);
         ASSERT_TRUE(valid.arg.has_value());

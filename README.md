@@ -28,8 +28,16 @@ cd scripts
 
 ```sh
 cd scripts
-./run.sh debug    # starts and waits for instructions. Pass debug | release during start. Default is debug if you don't specify.
+./run.sh debug|release    # Starts and waits for instructions. Default is debug if you don't specify preset.
 ```
+
+Run the tests:
+
+```sh
+cd scripts
+./unit_tests.sh
+```
+
 
 The program reads commands from standard input:
 
@@ -62,4 +70,27 @@ Task 1 paused
 Task 1 resumed
 > quit
 Shutting down, stopping remaining tasks...
+```
+
+## Using the library
+
+```cpp
+#include <tasklib/taskManager.hpp>
+
+tasklib::TaskManager manager;
+
+auto id = manager.start([](tasklib::TaskContext& ctx) {
+    constexpr int steps = 1000;
+    for (int i = 0; i < steps; ++i) {
+        if (!ctx.checkpoint())      // blocks while paused; false once stopped
+            return;
+        do_one_unit_of_work(i);
+        ctx.set_progress(double(i + 1) / steps);
+    }
+}, "my-task-type");
+
+manager.pause(id);                   // std::expected<void, TaskError>
+manager.resume(id);
+tasklib::TaskInfo info = *manager.status(id);
+manager.stop(id);
 ```

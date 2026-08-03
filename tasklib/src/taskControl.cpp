@@ -9,9 +9,11 @@ std::expected<void, TaskError> TaskControl::pause() {
     std::lock_guard lock(mutex_);
     if (status_ != TaskStatus::Running)
         return std::unexpected(TaskError::InvalidTransition);
-    // The externally visible state changes immediately; the worker parks at
-    // its next checkpoint. If the task happens to finish before reaching one,
-    // finish() resolves the race in favour of Completed (the work is done).
+    /**
+     * The externally visible state changes immediately; the worker parks at its next checkpoint. If
+     * the task happens to finish before reaching one, finish() resolves the race in favour of
+     * Completed (the work is done).
+     */
     status_ = TaskStatus::Paused;
     return {};
 }
@@ -53,14 +55,16 @@ void TaskControl::finish(std::exception_ptr error) {
     {
         std::lock_guard lock(mutex_);
         if (status_ == TaskStatus::Stopped) {
-            // A stop was requested before the function returned; the task is
-            // considered stopped even if it ran to the end (or threw) while
-            // winding down. Stopped is terminal per the state machine.
+            /**
+             * A stop was requested before the function returned; the task is considered stopped
+             * even if it ran to the end (or threw) while winding down. Stopped is terminal per the
+             * state machine.
+             */
         } else if (error) {
             status_ = TaskStatus::Failed;
             try {
                 std::rethrow_exception(std::move(error));
-            } catch (const std::exception& e) {
+            } catch (const std::exception &e) {
                 error_ = e.what();
             } catch (...) {
                 error_ = "unknown exception";

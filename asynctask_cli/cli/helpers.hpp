@@ -1,9 +1,8 @@
-#include <iostream>
 #include <format>
+#include <iostream>
 #include <string_view>
 
 #include <tasklib/taskManager.hpp>
-
 
 namespace {
 void print_help() {
@@ -26,7 +25,7 @@ void print_help() {
                  "  quit                  stop all tasks and exit (end-of-input works too)\n"
                  "\n"
                  "Available task types:\n";
-    for (const auto& type : cli::sample_task_types())
+    for (const auto &type : cli::sample_task_types())
         std::cout << std::format("  {:<8}{}\n", type.id, type.description);
 }
 
@@ -42,7 +41,7 @@ void print_status_header() {
     std::cout << std::format("{:>4}  {:<8}  {:<10}  {:>8}\n", "ID", "TYPE", "STATUS", "PROGRESS");
 }
 
-void print_task_info(const tasklib::TaskInfo& info) {
+void print_task_info(const tasklib::TaskInfo &info) {
     std::cout << std::format("{:>4}  {:<8}  {:<10}  {:>7.0f}%", info.id, info.type,
                              tasklib::to_string(info.status), info.progress * 100.0);
     if (!info.error.empty())
@@ -50,13 +49,13 @@ void print_task_info(const tasklib::TaskInfo& info) {
     std::cout << '\n';
 }
 
-void handle_start(tasklib::TaskManager& manager, const cli::Command& command) {
+void handle_start(tasklib::TaskManager &manager, const cli::Command &command) {
     const std::string_view requested =
         command.arg ? std::string_view{*command.arg} : cli::default_task_type_id;
-    const auto* type = cli::find_task_type(requested);
+    const auto *type = cli::find_task_type(requested);
     if (type == nullptr) {
         std::cout << std::format("Error: unknown task type '{}'. Available types:", requested);
-        for (const auto& available : cli::sample_task_types())
+        for (const auto &available : cli::sample_task_types())
             std::cout << ' ' << available.id;
         std::cout << '\n';
         return;
@@ -65,7 +64,7 @@ void handle_start(tasklib::TaskManager& manager, const cli::Command& command) {
     std::cout << std::format("Started task {} ({})\n", id, type->id);
 }
 
-void handle_control(tasklib::TaskManager& manager, const cli::Command& command) {
+void handle_control(tasklib::TaskManager &manager, const cli::Command &command) {
     const auto id = parse_task_id(*command.arg);
     if (!id) {
         std::cout << std::format("Error: '{}' is not a valid task ID\n", *command.arg);
@@ -102,7 +101,7 @@ void handle_control(tasklib::TaskManager& manager, const cli::Command& command) 
     }
 }
 
-void handle_status(tasklib::TaskManager& manager, const cli::Command& command) {
+void handle_status(tasklib::TaskManager &manager, const cli::Command &command) {
     if (command.arg) {
         const auto id = parse_task_id(*command.arg);
         if (!id) {
@@ -125,9 +124,7 @@ void handle_status(tasklib::TaskManager& manager, const cli::Command& command) {
         return;
     }
     print_status_header();
-    for (const auto& info : infos)
+    for (const auto &info : infos)
         print_task_info(info);
 }
-}
-
-
+} // namespace

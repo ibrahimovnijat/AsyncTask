@@ -16,11 +16,13 @@ using tasklib::TaskStatus;
 
 namespace {
 
-/// Polls `pred` until it holds or `timeout` elapses. Used only for conditions
-/// that are guaranteed to become true; the generous timeout is a safety net
-/// against hanging the test suite, not a tuning knob.
+/**
+ * @brief Polls `pred` until it holds or `timeout` elapses. Used only for conditions that are
+ * guaranteed to become true; the generous timeout is a safety net against hanging the test suite,
+ * not a tuning knob.
+ */
 template <typename Pred>
-[[nodiscard]] bool eventually(Pred&& pred, std::chrono::milliseconds timeout = 5s) {
+[[nodiscard]] bool eventually(Pred &&pred, std::chrono::milliseconds timeout = 5s) {
     const auto deadline = std::chrono::steady_clock::now() + timeout;
     while (std::chrono::steady_clock::now() < deadline) {
         if (pred())
@@ -30,17 +32,21 @@ template <typename Pred>
     return pred();
 }
 
-/// State shared with a probe task, used to observe its execution
-/// deterministically (no reliance on timing for correctness).
+/**
+ * @brief State shared with a probe task, used to observe its execution deterministically (no
+ * reliance on timing for correctness).
+ */
 struct ProbeState {
     std::atomic<long> iterations{0};
-    std::latch started{1}; ///< Counted down on the task's first iteration.
-    std::latch exited{1};  ///< Counted down when the task function returns.
+    std::latch started{1}; // Counted down on the task's first iteration.
+    std::latch exited{1};  // Counted down when the task function returns.
 };
 
-/// A task that loops until stopped, incrementing a counter per iteration.
+/**
+ * @brief A task that loops until stopped, incrementing a counter per iteration.
+ */
 tasklib::TaskFn make_probe_task(std::shared_ptr<ProbeState> state) {
-    return [state](tasklib::TaskContext& ctx) {
+    return [state](tasklib::TaskContext &ctx) {
         state->started.count_down();
         while (ctx.checkpoint()) {
             state->iterations.fetch_add(1, std::memory_order_relaxed);
@@ -50,10 +56,12 @@ tasklib::TaskFn make_probe_task(std::shared_ptr<ProbeState> state) {
     };
 }
 
-/// Waits until the probe's iteration counter is stable across an observation
-/// window, i.e. the worker has parked at the paused checkpoint. At most one
-/// in-flight iteration can land after pause(), so this converges immediately.
-void wait_until_parked(const ProbeState& state) {
+/**
+ * @brief Waits until the probe's iteration counter is stable across an observation window, i.e. the
+ * worker has parked at the paused checkpoint. At most one in-flight iteration can land after
+ * pause(), so this converges immediately.
+ */
+void wait_until_parked(const ProbeState &state) {
     ASSERT_TRUE(eventually([&] {
         const long before = state.iterations.load();
         std::this_thread::sleep_for(25ms);
@@ -65,7 +73,7 @@ void wait_until_parked(const ProbeState& state) {
 
 TEST(TaskManagerTest, TaskRunsToCompletion) {
     TaskManager manager;
-    const auto id = manager.start([](tasklib::TaskContext& ctx) {
+    const auto id = manager.start([](tasklib::TaskContext &ctx) {
         constexpr int steps = 10;
         for (int i = 0; i < steps; ++i) {
             if (!ctx.checkpoint())
@@ -88,9 +96,9 @@ TEST(TaskManagerTest, TaskRunsToCompletion) {
 
 TEST(TaskManagerTest, StartAssignsUniqueIdsAndStatusesAreSortedById) {
     TaskManager manager;
-    const auto a = manager.start([](tasklib::TaskContext&) {}, "alpha");
-    const auto b = manager.start([](tasklib::TaskContext&) {}, "beta");
-    const auto c = manager.start([](tasklib::TaskContext&) {}, "gamma");
+    const auto a = manager.start([](tasklib::TaskContext &) {}, "alpha");
+    const auto b = manager.start([](tasklib::TaskContext &) {}, "beta");
+    const auto c = manager.start([](tasklib::TaskContext &) {}, "gamma");
     EXPECT_LT(a, b);
     EXPECT_LT(b, c);
     EXPECT_EQ(manager.size(), 3u);
@@ -191,7 +199,7 @@ TEST(TaskManagerTest, InvalidTransitionsAreRejected) {
 
 TEST(TaskManagerTest, CompletedIsTerminal) {
     TaskManager manager;
-    const auto id = manager.start([](tasklib::TaskContext&) {});
+    const auto id = manager.start([](tasklib::TaskContext &) {});
     ASSERT_EQ(*manager.wait(id), TaskStatus::Completed);
 
     for (auto operation : {&TaskManager::pause, &TaskManager::resume, &TaskManager::stop}) {
@@ -212,8 +220,8 @@ TEST(TaskManagerTest, UnknownIdReportsNotFound) {
 
 TEST(TaskManagerTest, UncaughtExceptionYieldsFailedStatusWithMessage) {
     TaskManager manager;
-    const auto id = manager.start(
-        [](tasklib::TaskContext&) { throw std::runtime_error("boom"); }, "faulty");
+    const auto id =
+        manager.start([](tasklib::TaskContext &) { throw std::runtime_error("boom"); }, "faulty");
 
     ASSERT_EQ(*manager.wait(id), TaskStatus::Failed);
     const auto info = manager.status(id);
@@ -226,7 +234,7 @@ TEST(TaskManagerTest, ProgressIsVisibleWhileRunning) {
     TaskManager manager;
     auto reported = std::make_shared<std::latch>(1);
     auto release = std::make_shared<std::latch>(1);
-    const auto id = manager.start([reported, release](tasklib::TaskContext& ctx) {
+    const auto id = manager.start([reported, release](tasklib::TaskContext &ctx) {
         ctx.set_progress(0.25);
         reported->count_down();
         release->wait();
@@ -246,7 +254,7 @@ TEST(TaskManagerTest, ProgressIsVisibleWhileRunning) {
 TEST(TaskManagerTest, StopRequestIsObservableViaStopToken) {
     TaskManager manager;
     auto started = std::make_shared<std::latch>(1);
-    const auto id = manager.start([started](tasklib::TaskContext& ctx) {
+    const auto id = manager.start([started](tasklib::TaskContext &ctx) {
         started->count_down();
         const auto token = ctx.stop_token();
         while (!token.stop_requested())
@@ -266,7 +274,7 @@ TEST(TaskManagerTest, ManyTasksRunConcurrentlyToCompletion) {
     std::vector<tasklib::TaskId> ids;
     ids.reserve(task_count);
     for (int i = 0; i < task_count; ++i) {
-        ids.push_back(manager.start([&completed](tasklib::TaskContext& ctx) {
+        ids.push_back(manager.start([&completed](tasklib::TaskContext &ctx) {
             if (!ctx.checkpoint())
                 return;
             completed.fetch_add(1, std::memory_order_relaxed);
@@ -285,7 +293,7 @@ TEST(TaskManagerTest, StopAllStopsEveryActiveTask) {
     auto second = std::make_shared<ProbeState>();
     const auto a = manager.start(make_probe_task(first));
     const auto b = manager.start(make_probe_task(second));
-    const auto done = manager.start([](tasklib::TaskContext&) {});
+    const auto done = manager.start([](tasklib::TaskContext &) {});
     ASSERT_EQ(*manager.wait(done), TaskStatus::Completed);
     first->started.wait();
     second->started.wait();

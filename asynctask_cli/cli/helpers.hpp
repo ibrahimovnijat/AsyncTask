@@ -35,7 +35,7 @@ void print_help() {
                  "\n"
                  "Available task types:\n";
     for (const auto &type : cli::sample_task_types())
-        std::cout << std::format("  {:<8}{}\n", type.id, type.description);
+        std::cout << std::format("  {:<10}{}\n", type.id, type.description);
 }
 
 std::optional<tasklib::TaskId> parse_task_id(std::string_view text) {

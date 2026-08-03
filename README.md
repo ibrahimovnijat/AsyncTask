@@ -44,7 +44,7 @@ The program reads commands from standard input:
 | Command                | Effect                                                        |
 | ---------------------- | ------------------------------------------------------------- |
 | `start`                | Start a task of the default type (`count`) and print its ID   |
-| `start <task_type_id>` | Start a task of the given type (`count` or `primes`)          |
+| `start <task_type_id>` | Start a task of the given type (see the table below)          |
 | `pause <task_id>`      | Pause a running task                                          |
 | `resume <task_id>`     | Resume a paused task                                          |
 | `stop <task_id>`       | Stop a running or paused task                                 |
@@ -52,6 +52,16 @@ The program reads commands from standard input:
 | `status <task_id>`     | As above, for a single task                                   |
 | `help`                 | Print the help message                                        |
 | `quit`                 | Stop all tasks and shut down gracefully (Ctrl-D works too)    |
+
+The example application ships four task types, each showing a different way for a task
+to cooperate with the library (`help` lists them at runtime):
+
+| Task type  | Shape     | What it demonstrates                                              |
+| ---------- | --------- | ----------------------------------------------------------------- |
+| `count`    | wait-bound| 100 steps of 50 ms; checkpoints every step                        |
+| `primes`   | CPU-bound | trial division below 2'000'000; checkpoints every 1024 candidates |
+| `download` | I/O-bound | 8 MiB in 64 KiB chunks; waits interruptibly on `stop_token()`     |
+| `fail`     | failing   | throws halfway; ends as `Failed` with the message in `status`     |
 
 Example session:
 

@@ -34,10 +34,10 @@ public:
     TaskManager() = default;
     ~TaskManager();
 
-    TaskManager(const TaskManager&) = delete;
-    TaskManager& operator=(const TaskManager&) = delete;
-    TaskManager(TaskManager&&) = delete;
-    TaskManager& operator=(TaskManager&&) = delete;
+    TaskManager(const TaskManager &) = delete;
+    TaskManager &operator=(const TaskManager &) = delete;
+    TaskManager(TaskManager &&) = delete;
+    TaskManager &operator=(TaskManager &&) = delete;
 
     /// Schedules `fn` to run asynchronously, starting immediately, and
     /// returns its unique ID. `type` is an opaque label reported back via

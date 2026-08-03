@@ -76,10 +76,10 @@ void TaskManager::stop_all() {
     {
         std::lock_guard lock(mutex_);
         controls.reserve(tasks_.size());
-        for (const auto& [id, entry] : tasks_)
+        for (const auto &[id, entry] : tasks_)
             controls.push_back(entry.control);
     }
-    for (const auto& control : controls)
+    for (const auto &control : controls)
         (void)control->stop(); // Terminal tasks report InvalidTransition; that is fine here.
 }
 
@@ -102,20 +102,19 @@ std::expected<TaskInfo, TaskError> TaskManager::status(TaskId id) const {
 }
 
 std::vector<TaskInfo> TaskManager::statuses() const {
-    std::vector<std::pair<TaskId, std::pair<std::string, std::shared_ptr<TaskControl>>>>
-        snapshot;
+    std::vector<std::pair<TaskId, std::pair<std::string, std::shared_ptr<TaskControl>>>> snapshot;
     {
         std::lock_guard lock(mutex_);
         snapshot.reserve(tasks_.size());
-        for (const auto& [id, entry] : tasks_)
+        for (const auto &[id, entry] : tasks_)
             snapshot.emplace_back(id, std::make_pair(entry.type, entry.control));
     }
-    std::ranges::sort(snapshot, {}, [](const auto& item) { return item.first; });
+    std::ranges::sort(snapshot, {}, [](const auto &item) { return item.first; });
 
     std::vector<TaskInfo> result;
     result.reserve(snapshot.size());
-    for (auto& [id, rest] : snapshot) {
-        auto& [type, control] = rest;
+    for (auto &[id, rest] : snapshot) {
+        auto &[type, control] = rest;
         result.push_back(TaskInfo{.id = id,
                                   .status = control->status(),
                                   .type = std::move(type),

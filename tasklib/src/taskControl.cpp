@@ -60,7 +60,7 @@ void TaskControl::finish(std::exception_ptr error) {
             status_ = TaskStatus::Failed;
             try {
                 std::rethrow_exception(std::move(error));
-            } catch (const std::exception& e) {
+            } catch (const std::exception &e) {
                 error_ = e.what();
             } catch (...) {
                 error_ = "unknown exception";

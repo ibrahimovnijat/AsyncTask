@@ -1,9 +1,9 @@
+#include "cli/command.hpp"
+#include "cli/helpers.hpp"
+#include "cli/sampleTasks.hpp"
 #include <iostream>
 #include <print>
-#include "cli/command.hpp"
-#include "cli/sampleTasks.hpp"
 #include <tasklib/taskManager.hpp>
-#include "cli/helpers.hpp"
 
 #include <charconv>
 #include <format>
@@ -12,9 +12,7 @@
 #include <string>
 #include <string_view>
 
-
-
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     if (argc > 1) {
         const std::string_view arg = argv[1];
         if (arg == "--help" || arg == "-h") {

@@ -25,8 +25,7 @@ namespace tasklib {
 /// be broken mid-update), so the task itself chooses safe interruption points.
 class TaskContext {
 public:
-    explicit TaskContext(std::shared_ptr<TaskControl> control)
-        : control_(std::move(control)) {}
+    explicit TaskContext(std::shared_ptr<TaskControl> control) : control_(std::move(control)) {}
 
     /// Blocks while the task is paused. Returns false once the task has been
     /// stopped; the task function should then return as soon as possible.
@@ -48,6 +47,6 @@ private:
 
 /// A task is a close-ended unit of work. Move-only so tasks can own
 /// non-copyable resources (file handles, promises, ...).
-using TaskFn = std::move_only_function<void(TaskContext&)>;
+using TaskFn = std::move_only_function<void(TaskContext &)>;
 
 } // namespace tasklib

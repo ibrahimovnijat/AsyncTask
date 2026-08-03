@@ -24,12 +24,12 @@ Command invalid(std::string message) {
 
 } // namespace
 
-Command parseCommand(const std::string& line) {
+Command parseCommand(const std::string &line) {
     const auto tokens = tokenize(line);
     if (tokens.empty())
         return {};
 
-    const std::string& verb = tokens.front();
+    const std::string &verb = tokens.front();
     const std::size_t args = tokens.size() - 1;
 
     const auto simple = [&](Command::Type type) {

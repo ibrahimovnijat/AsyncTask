@@ -19,6 +19,6 @@ struct SampleTaskType {
 inline constexpr std::string_view default_task_type_id = "count";
 
 [[nodiscard]] std::span<const SampleTaskType> sample_task_types();
-[[nodiscard]] const SampleTaskType* find_task_type(std::string_view id);
+[[nodiscard]] const SampleTaskType *find_task_type(std::string_view id);
 
 } // namespace cli

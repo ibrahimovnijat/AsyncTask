@@ -80,4 +80,4 @@ private:
     std::stop_source stop_source_;
 };
 
-} // namespace tasklib::detail
+} // namespace tasklib

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -euo pipefail
 clear 2>/dev/null || true
 

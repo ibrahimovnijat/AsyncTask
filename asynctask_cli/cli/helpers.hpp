@@ -1,8 +1,17 @@
-#include <format>
-#include <iostream>
-#include <string_view>
+#pragma once
+
+#include "command.hpp"
+#include "sampleTasks.hpp"
 
 #include <tasklib/taskManager.hpp>
+
+#include <charconv>
+#include <expected>
+#include <format>
+#include <iostream>
+#include <optional>
+#include <string>
+#include <string_view>
 
 namespace {
 void print_help() {

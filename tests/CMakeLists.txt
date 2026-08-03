@@ -17,7 +17,11 @@ endif()
 include(GoogleTest)
 
 add_executable(unit_tests
+    asynctask_cli/commandParserTest.cpp
     tasklib/taskManagerTest.cpp
+    # The CLI parser is part of the executable, not a library, so compile the
+    # unit under test straight into the test binary.
+    ${PROJECT_SOURCE_DIR}/asynctask_cli/cli/command.cpp
 )
 
 target_link_libraries(unit_tests

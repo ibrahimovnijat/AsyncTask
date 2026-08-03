@@ -6,16 +6,19 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": { "CMAKE_COLOR_DIAGNOSTICS": "ON" }
+            "cacheVariables": {
+                "CMAKE_COLOR_DIAGNOSTICS": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "BUILD_TESTS": "OFF",
+                "WARNINGS_AS_ERRORS": "OFF"
+            }
         },
         {
             "name": "debug",
             "displayName": "Debug",
             "inherits": "base",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "WARNINGS_AS_ERRORS": "ON",
-                "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {

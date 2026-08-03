@@ -1,13 +1,15 @@
 set(TASKLIB_HEADERS
-    include/tasklib/common.hpp)
+    include/tasklib/types.hpp
+    include/tasklib/taskControl.hpp
+    include/tasklib/taskManager.hpp)
 
 set(TASK_LIB_SOURCES
-    src/common.cpp)
+    src/taskControl.cpp
+    src/taskManager.cpp)
 
 add_library(tasklib STATIC 
         ${TASKLIB_HEADERS}
         ${TASK_LIB_SOURCES})
-# add_library(PIX4D_task::tasklib ALIAS tasklib) // Redundant?
 
 # Consumers include headers as: #include <tasklib/common.hpp>
 target_include_directories(tasklib

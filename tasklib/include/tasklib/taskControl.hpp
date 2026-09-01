@@ -25,7 +25,6 @@ namespace tasklib {
  */
 class TaskControl {
 public:
-    // ---- Controlling side -------------------------------------------------
     /**
      * @brief Running -> Paused. Takes effect at the task's next checkpoint.
      */
@@ -42,7 +41,6 @@ public:
      */
     std::expected<void, TaskError> stop();
 
-    // ---- Executing side ---------------------------------------------------
     /**
      * @brief Blocks while the task is paused. Returns false once a stop has been requested, in
      * which case the task function should return promptly.
@@ -63,7 +61,6 @@ public:
      */
     void finish(std::exception_ptr error);
 
-    // ---- Queries (any thread) ---------------------------------------------
     [[nodiscard]] TaskStatus status() const;
     [[nodiscard]] double progress() const noexcept;
     [[nodiscard]] std::string error_message() const;
@@ -87,6 +84,10 @@ private:
     mutable std::condition_variable cv_;
     TaskStatus status_ = TaskStatus::Running;
     std::string error_;
+
+    /**
+     * @brief lone atomic — not used to guard or publish any other data (unlike status_/error_, which are mutex-protected).
+     */
     std::atomic<double> progress_{0.0};
     std::stop_source stop_source_;
 };

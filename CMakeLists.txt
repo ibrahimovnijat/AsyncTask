@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(pix4d_asyncTask
+project(asyncTask
     VERSION 0.1.0
     LANGUAGES CXX)
 

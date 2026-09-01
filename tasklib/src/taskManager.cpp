@@ -10,16 +10,6 @@ TaskManager::~TaskManager() {
     stop_all();
 
     /**
-     * Move the entries out so worker threads are joined outside of mutex_ (a worker never touches
-     * the manager, but holding a lock across joins would be a deadlock waiting to happen if that
-     * ever changes).
-     */
-    std::unordered_map<TaskId, Entry> doomed;
-    {
-        std::lock_guard lock(mutex_);
-        doomed.swap(tasks_);
-    }
-    /**
      * ~Entry destroys each std::jthread, which joins. Tasks that honour their checkpoints exit
      * promptly because stop_all() already flagged them.
      */

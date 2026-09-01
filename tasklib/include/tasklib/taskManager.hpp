@@ -97,9 +97,9 @@ private:
 
     [[nodiscard]] std::shared_ptr<TaskControl> find_control(TaskId id) const;
 
-    mutable std::mutex mutex_; // Guards tasks_ and next_id_ only.
-    std::unordered_map<TaskId, Entry> tasks_;
-    TaskId next_id_ = 1;
+    mutable std::mutex m_mutex; // Guards m_tasks and m_next_id only.
+    std::unordered_map<TaskId, Entry> m_tasks;
+    TaskId m_next_id = 1;
 };
 
 } // namespace tasklib

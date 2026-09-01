@@ -17,7 +17,7 @@ namespace tasklib {
  * task (executing side). One instance per task, owned via shared_ptr by both sides so lifetime is
  * safe regardless of which side finishes first.
  * Threading model:
- * - status_/error_ are protected by mutex_; progress_ is a lone atomic so tasks can report progress
+ * - m_status/m_error are protected by m_mutex; m_progress is a lone atomic so tasks can report progress
  * cheaply from tight loops.
  * - Control operations (pause/resume/stop) validate the state machine and return immediately; they
  * never block on the worker.
@@ -76,20 +76,20 @@ public:
      * @brief Standard-library stop token, usable by tasks that want to pass cancellation into std::
      * APIs or check it without a full checkpoint.
      */
-    [[nodiscard]] std::stop_token stop_token() const { return stop_source_.get_token(); }
-    [[nodiscard]] bool stop_requested() const noexcept { return stop_source_.stop_requested(); }
+    [[nodiscard]] std::stop_token stop_token() const { return m_stop_source.get_token(); }
+    [[nodiscard]] bool stop_requested() const noexcept { return m_stop_source.stop_requested(); }
 
 private:
-    mutable std::mutex mutex_;
-    mutable std::condition_variable cv_;
-    TaskStatus status_ = TaskStatus::Running;
-    std::string error_;
+    mutable std::mutex m_mutex;
+    mutable std::condition_variable m_cv;
+    TaskStatus m_status = TaskStatus::Running;
+    std::string m_error;
 
     /**
-     * @brief lone atomic — not used to guard or publish any other data (unlike status_/error_, which are mutex-protected).
+     * @brief lone atomic — not used to guard or publish any other data (unlike m_status/m_error, which are mutex-protected).
      */
-    std::atomic<double> progress_{0.0};
-    std::stop_source stop_source_;
+    std::atomic<double> m_progress{0.0};
+    std::stop_source m_stop_source;
 };
 
 } // namespace tasklib

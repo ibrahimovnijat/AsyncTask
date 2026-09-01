@@ -17,32 +17,32 @@ namespace tasklib {
  */
 class TaskContext {
 public:
-    explicit TaskContext(std::shared_ptr<TaskControl> control) : control_(std::move(control)) {}
+    explicit TaskContext(std::shared_ptr<TaskControl> control) : m_control(std::move(control)) {}
 
     /**
      * @brief Blocks while the task is paused. Returns false once the task has been stopped; the
      * task function should then return as soon as possible.
      */
-    [[nodiscard]] bool checkpoint() { return control_->checkpoint(); }
+    [[nodiscard]] bool checkpoint() { return m_control->checkpoint(); }
 
     /**
      * @brief Reports progress in [0, 1] (clamped). Optional but recommended.
      */
-    void set_progress(double value) noexcept { control_->set_progress(value); }
+    void set_progress(double value) noexcept { m_control->set_progress(value); }
 
     /**
      * @brief  Non-blocking stop check, for tasks that poll instead of checkpointing.
      */
-    [[nodiscard]] bool stop_requested() const noexcept { return control_->stop_requested(); }
+    [[nodiscard]] bool stop_requested() const noexcept { return m_control->stop_requested(); }
 
     /**
      * @brief  Stop token for interoperability with std:: cancellation-aware APIs (e.g.
      * std::condition_variable_any::wait).
      */
-    [[nodiscard]] std::stop_token stop_token() const { return control_->stop_token(); }
+    [[nodiscard]] std::stop_token stop_token() const { return m_control->stop_token(); }
 
 private:
-    std::shared_ptr<TaskControl> control_;
+    std::shared_ptr<TaskControl> m_control;
 };
 
 /**
